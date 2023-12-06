@@ -5,16 +5,11 @@ import { useEffect, useState } from 'react'
 
 export default function Home() {
   const CLIENT_ID = process.env.NEXT_PUBLIC_CLIENT_ID
+  const REDIRECT_URI = 'https://band-billing-app-timhilton.vercel.app/' || 'http://localhost:3000/';
   const AUTH_ENDPOINT = "https://accounts.spotify.com/authorize"
   const RESPONSE_TYPE = "token"
 
   const [token, setToken] = useState("");
-  const [redirectUri, setRedirectUri] = useState('');
-
-useEffect(() => {
-  const uri = window.location.href.endsWith('/') ? window.location.href.slice(0, -1) : window.location.href;
-  setRedirectUri(uri);
-}, []);
 
   useEffect(() => {
     const hash = window.location.hash;
@@ -44,7 +39,7 @@ useEffect(() => {
           <header className="App-header">
               <h1>Band Billing App</h1>
               {!token ?
-                  <a className={`${styles.button} ${styles.buttonGreen}`} href={`${AUTH_ENDPOINT}?client_id=${CLIENT_ID}&redirect_uri=${redirectUri}&response_type=${RESPONSE_TYPE}`}>
+                  <a className={`${styles.button} ${styles.buttonGreen}`} href={`${AUTH_ENDPOINT}?client_id=${CLIENT_ID}&redirect_uri=${REDIRECT_URI}&response_type=${RESPONSE_TYPE}`}>
                     Login to Spotify
                   </a>
                   : <button className={`${styles.button} ${styles.buttonGreen}`} onClick={logout}>Logout of Spotify</button>
