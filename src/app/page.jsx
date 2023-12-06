@@ -5,7 +5,7 @@ import { useEffect, useState } from 'react'
 
 export default function Home() {
   const CLIENT_ID = process.env.NEXT_PUBLIC_CLIENT_ID
-  const REDIRECT_URI = 'https://band-billing-app-timhilton.vercel.app/';
+  const REDIRECT_URI = 'https://band-billing-app-timhilton.vercel.app';
   const AUTH_ENDPOINT = "https://accounts.spotify.com/authorize"
   const RESPONSE_TYPE = "token"
 
