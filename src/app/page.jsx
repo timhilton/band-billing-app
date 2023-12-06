@@ -5,10 +5,7 @@ import { useEffect, useState } from 'react'
 
 export default function Home() {
   const CLIENT_ID = process.env.NEXT_PUBLIC_CLIENT_ID
-  let REDIRECT_URI;
-  if (typeof window !== 'undefined') {
-    REDIRECT_URI = window.location.href.endsWith('/') ? window.location.href.slice(0, -1) : window.location.href;
-  }
+  const REDIRECT_URI = window.location.href.endsWith('/') ? window.location.href.slice(0, -1) : window.location.href;
   const AUTH_ENDPOINT = "https://accounts.spotify.com/authorize"
   const RESPONSE_TYPE = "token"
 
