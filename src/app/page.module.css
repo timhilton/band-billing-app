@@ -4,6 +4,10 @@
   align-items: flex-start;
   padding: 6rem;
   min-height: 100vh;
+
+  @media screen and (max-width: 768px) {
+    padding: 24px;
+  }
 }
 
 .button {
