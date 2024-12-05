@@ -11,9 +11,6 @@ export default function Home() {
   const AUTH_ENDPOINT = "https://accounts.spotify.com/authorize"
   const RESPONSE_TYPE = "token"
 
-  console.log('Client ID:', CLIENT_ID);
-  console.log('Redirect URI:', REDIRECT_URI);
-
   const [token, setToken] = useState("");
 
   useEffect(() => {
