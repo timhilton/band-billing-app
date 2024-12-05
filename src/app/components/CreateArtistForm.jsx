@@ -1,7 +1,8 @@
 'use client';
+
+import pageStyles from '../page.module.css';
 // components/ArtistForm.js
 import styles from './createartistform.module.css';
-import pageStyles from '../page.module.css';
 import { useState } from 'react';
 
 export default function CreateArtistForm({ token }) {
@@ -21,13 +22,15 @@ export default function CreateArtistForm({ token }) {
       }
     });
     const data = await res.json();
+    console.log(data);
     return data.artists.items[0].followers.total;
   }
   
   
   const getInstagramFollowers = async () => {
-    const res = await fetch(`https://graph.facebook.com/v18.0/${APP_ID}?fields=business_discovery.username(${instagram})%7Bfollowers_count%2Cmedia_count%2Cname%2Cusername%7D&access_token=${ACCESS_TOKEN}`);
+    const res = await fetch(`https://graph.facebook.com/v21.0/${APP_ID}?fields=business_discovery.username(${instagram})%7Bfollowers_count%2Cmedia_count%2Cname%2Cusername%7D&access_token=${ACCESS_TOKEN}`);
     const data = await res.json();
+    console.log(data)
     return data.business_discovery.followers_count;
   }
   

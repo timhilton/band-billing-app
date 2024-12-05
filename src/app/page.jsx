@@ -1,11 +1,13 @@
 'use client';
-import styles from './page.module.css'
-import CreateArtistForm from './components/CreateArtistForm';
+
 import { useEffect, useState } from 'react'
+
+import CreateArtistForm from './components/CreateArtistForm';
+import styles from './page.module.css'
 
 export default function Home() {
   const CLIENT_ID = process.env.NEXT_PUBLIC_CLIENT_ID
-  let REDIRECT_URI = process.env.NODE_ENV === 'production' ? 'https://delightful-monstera-173079.netlify.app' : 'http://localhost:3000';
+  let REDIRECT_URI = process.env.NODE_ENV === 'production' ? 'https://band-billing-app.vercel.app/' : 'http://localhost:3000';
   const AUTH_ENDPOINT = "https://accounts.spotify.com/authorize"
   const RESPONSE_TYPE = "token"
 
