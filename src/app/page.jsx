@@ -11,6 +11,9 @@ export default function Home() {
   const AUTH_ENDPOINT = "https://accounts.spotify.com/authorize"
   const RESPONSE_TYPE = "token"
 
+  console.log('Client ID:', CLIENT_ID);
+  console.log('Redirect URI:', REDIRECT_URI);
+
   const [token, setToken] = useState("");
 
   useEffect(() => {
@@ -41,7 +44,7 @@ export default function Home() {
           <header className="App-header">
               <h1>Band Billing App</h1>
               {!token ?
-                  <a className={`${styles.button} ${styles.buttonGreen}`} href={`${AUTH_ENDPOINT}?client_id=${CLIENT_ID}&redirect_uri=${REDIRECT_URI}&response_type=${RESPONSE_TYPE}`}>
+                  <a className={`${styles.button} ${styles.buttonGreen}`} href={`${AUTH_ENDPOINT}?client_id=${CLIENT_ID}&redirect_uri=${encodeURIComponent(REDIRECT_URI)}&response_type=${RESPONSE_TYPE}`}>
                     Login to Spotify
                   </a>
                   : <button className={`${styles.button} ${styles.buttonGreen}`} onClick={logout}>Logout of Spotify</button>
