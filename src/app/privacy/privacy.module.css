@@ -1,0 +1,65 @@
+.main {
+  max-width: 740px;
+  margin: 0 auto;
+  padding: 4rem 2rem;
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+}
+
+.nav {
+  font-size: 0.9rem;
+}
+
+.nav a {
+  text-decoration: underline;
+  opacity: 0.7;
+}
+
+.nav a:hover {
+  opacity: 1;
+}
+
+.main h1 {
+  font-size: 2rem;
+}
+
+.updated {
+  opacity: 0.6;
+  font-size: 0.85rem;
+  margin-top: -1.5rem;
+}
+
+.main section {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.main h2 {
+  font-size: 1.2rem;
+}
+
+.main p,
+.main li {
+  line-height: 1.7;
+  opacity: 0.85;
+}
+
+.main ul {
+  padding-left: 1.5rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.main a {
+  text-decoration: underline;
+}
+
+.main code {
+  font-size: 0.85em;
+  background: rgba(128, 128, 128, 0.15);
+  padding: 1px 5px;
+  border-radius: 4px;
+}
