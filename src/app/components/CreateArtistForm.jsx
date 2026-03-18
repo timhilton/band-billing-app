@@ -68,6 +68,8 @@ export default function CreateArtistForm({ token }) {
     return data.business_discovery.followers_count;
   }
 
+  const [loading, setLoading] = useState(false);
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     setError('');
@@ -78,8 +80,11 @@ export default function CreateArtistForm({ token }) {
         return;
       }
 
-      const spotifyFollowers = await getSpotifyFollowers();
-      const instagramFollowers = await getInstagramFollowers();
+      setLoading(true);
+      const [spotifyFollowers, instagramFollowers] = await Promise.all([
+        getSpotifyFollowers(),
+        getInstagramFollowers(),
+      ]);
       setSpotifyFollowers(spotifyFollowers);
       setInstagramFollowers(instagramFollowers);
 
@@ -97,6 +102,8 @@ export default function CreateArtistForm({ token }) {
     } catch (err) {
       console.error("Error fetching data: ", err);
       setError(err.message || 'Error fetching data. Please try again.');
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -137,7 +144,7 @@ export default function CreateArtistForm({ token }) {
           onChange={(e) => setInstagram(e.target.value)}
         />
       </label>
-      <button className={`${pageStyles.button} ${pageStyles.buttonGradient}`} type="submit">Add Artist</button>
+      <button className={`${pageStyles.button} ${pageStyles.buttonGradient}`} type="submit" disabled={loading}>{loading ? 'Loading...' : 'Add Artist'}</button>
       {error && <p style={{ color: 'red', marginTop: '0.5rem' }}>{error}</p>}
     </form>
 
