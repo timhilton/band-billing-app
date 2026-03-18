@@ -96,17 +96,75 @@ export default function Home() {
 
   return (
     <main className={styles.main}>
-      <div className="App">
-        <header className="App-header">
-          <h1>Band Billing App</h1>
-          {!token
-            ? <button className={`${styles.button} ${styles.buttonGreen}`} onClick={login}>Login to Spotify</button>
-            : <button className={`${styles.button} ${styles.buttonGreen}`} onClick={logout}>Logout of Spotify</button>
-          }
-        </header>
-      </div>
-      <CreateArtistForm token={token} />
-      <footer style={{ marginTop: 'auto', paddingTop: '2rem', fontSize: '0.8rem', opacity: 0.5 }}>
+      <section className={styles.hero}>
+        <div className={styles.heroCopy}>
+          <p className={styles.eyebrow}>Audience-led booking</p>
+          <h1 className={styles.title}>Design a sharper bill with real fan momentum.</h1>
+          <p className={styles.subtitle}>
+            Compare Spotify reach and Instagram pull in one place so your lineup decisions feel fast,
+            informed, and presentation-ready.
+          </p>
+          <div className={styles.ctaRow}>
+            {!token ? (
+              <button className={`${styles.button} ${styles.buttonPrimary}`} onClick={login}>
+                Connect Spotify
+              </button>
+            ) : (
+              <button className={`${styles.button} ${styles.buttonSecondary}`} onClick={logout}>
+                Disconnect Spotify
+              </button>
+            )}
+            <a className={styles.inlineLink} href="#artist-workspace">Jump to workspace</a>
+          </div>
+        </div>
+
+        <aside className={styles.heroPanel}>
+          <div className={styles.panelTop}>
+            <span className={styles.statusDot} />
+            <span>{token ? 'Spotify connected' : 'Spotify login required'}</span>
+          </div>
+          <div className={styles.metricGrid}>
+            <div className={styles.metricCard}>
+              <span className={styles.metricLabel}>Data sources</span>
+              <strong>Spotify + Instagram</strong>
+            </div>
+            <div className={styles.metricCard}>
+              <span className={styles.metricLabel}>Ideal use</span>
+              <strong>Festival billing</strong>
+            </div>
+            <div className={styles.metricCard}>
+              <span className={styles.metricLabel}>Workflow</span>
+              <strong>Search, compare, sort</strong>
+            </div>
+            <div className={styles.metricCard}>
+              <span className={styles.metricLabel}>Outcome</span>
+              <strong>Ranked lineup signal</strong>
+            </div>
+          </div>
+        </aside>
+      </section>
+
+      <section className={styles.featureStrip}>
+        <div className={styles.feature}>
+          <span className={styles.featureKicker}>01</span>
+          <p>Pull artist follower counts from Spotify search results.</p>
+        </div>
+        <div className={styles.feature}>
+          <span className={styles.featureKicker}>02</span>
+          <p>Layer in Instagram audience size for a broader view of traction.</p>
+        </div>
+        <div className={styles.feature}>
+          <span className={styles.featureKicker}>03</span>
+          <p>Sort your lineup by weighted audience signal to spot stronger placements.</p>
+        </div>
+      </section>
+
+      <section id="artist-workspace" className={styles.workspace}>
+        <CreateArtistForm token={token} />
+      </section>
+
+      <footer className={styles.footer}>
+        <span>Built for fast artist shortlist sessions.</span>
         <Link href="/privacy">Privacy Policy</Link>
       </footer>
     </main>

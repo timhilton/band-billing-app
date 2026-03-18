@@ -1,20 +1,25 @@
 'use client';
 
 import pageStyles from '../page.module.css';
-// components/ArtistForm.js
 import styles from './createartistform.module.css';
 import { useState } from 'react';
 
 export default function CreateArtistForm({ token }) {
   const [name, setName] = useState('');
-  const [spotifyFollowers, setSpotifyFollowers] = useState('');
-  const [instagramFollowers, setInstagramFollowers] = useState('');
   const [error, setError] = useState('');
-
   const [instagram, setInstagram] = useState('');
   const [artists, setArtists] = useState([]);
+  const [loading, setLoading] = useState(false);
   const IG_ACCOUNT_ID = process.env.NEXT_PUBLIC_FB_IG_ACCOUNT_ID;
   const IG_ACCESS_TOKEN = process.env.NEXT_PUBLIC_IG_ACCESS_TOKEN;
+
+  const formatFollowers = (value) => {
+    if (typeof value !== 'number') {
+      return '0';
+    }
+
+    return new Intl.NumberFormat('en-US').format(value);
+  };
 
   const getSpotifyFollowers = async () => {
     const res = await fetch(`https://api.spotify.com/v1/search?q=${name}&type=artist&limit=1`, {
@@ -38,13 +43,10 @@ export default function CreateArtistForm({ token }) {
     return data.business_discovery.followers_count;
   }
 
-  const [loading, setLoading] = useState(false);
-
   const handleSubmit = async (e) => {
     e.preventDefault();
     setError('');
     try {
-      // Check if the artist's name already exists in the artists array
       if (artists.some(artist => artist.name.toLowerCase() === name.toLowerCase())) {
         setError('This artist is already in your list.');
         return;
@@ -55,8 +57,6 @@ export default function CreateArtistForm({ token }) {
         getSpotifyFollowers(),
         getInstagramFollowers(),
       ]);
-      setSpotifyFollowers(spotifyFollowers);
-      setInstagramFollowers(instagramFollowers);
 
       let artistObj = {
         name: name,
@@ -90,41 +90,111 @@ export default function CreateArtistForm({ token }) {
     });
   }
 
+  const totalAudience = artists.reduce((total, artist) => {
+    return total + artist.spotifyFollowers + artist.instagramFollowers;
+  }, 0);
+
   return (
-    <>
     <article className={styles.article}>
-    <form className={styles.form} onSubmit={handleSubmit}>
-      <h2>Add an Artist</h2>
-      <label className={styles.label}>
-        Artist Name:
-        <input
-          className={styles.input}
-          type="text"
-          value={name}
-          onChange={(e) => setName(e.target.value)}
-          required
-        />
-      </label>
-      <label className={styles.label}>
-        Instagram Handle:
-        <input
-          className={styles.input}
-          type="text"
-          value={instagram}
-          onChange={(e) => setInstagram(e.target.value)}
-        />
-      </label>
-      <button className={`${pageStyles.button} ${pageStyles.buttonGradient}`} type="submit" disabled={loading}>{loading ? 'Loading...' : 'Add Artist'}</button>
-      {error && <p style={{ color: 'red', marginTop: '0.5rem' }}>{error}</p>}
-    </form>
+      <section className={styles.formPanel}>
+        <div className={styles.panelHeader}>
+          <p className={styles.kicker}>Artist workspace</p>
+          <h2>Build the shortlist</h2>
+          <p className={styles.panelText}>
+            Search one artist at a time and combine Spotify followers with Instagram audience size.
+          </p>
+        </div>
 
-    <div id="top-artists">
-      <h2>Lineup</h2>
-      <button className={`${pageStyles.button} ${pageStyles.buttonGradient}`} onClick={handleSort}>Sort Lineup</button>
-      <ul id='artists'>{artists.map(artist => <li key={artist.name}><div>{artist.name} - <small><strong>S:</strong> {artist.spotifyFollowers} - <strong>IG:</strong> {artist.instagramFollowers}</small></div></li>)}</ul>
-    </div>
+        <form className={styles.form} onSubmit={handleSubmit}>
+          <label className={styles.label}>
+            Artist Name
+            <input
+              className={styles.input}
+              type="text"
+              placeholder="ex. Fred again.."
+              value={name}
+              onChange={(e) => setName(e.target.value)}
+              required
+            />
+          </label>
+          <label className={styles.label}>
+            Instagram Handle
+            <input
+              className={styles.input}
+              type="text"
+              placeholder="without @"
+              value={instagram}
+              onChange={(e) => setInstagram(e.target.value)}
+            />
+          </label>
+          <button
+            className={`${pageStyles.button} ${pageStyles.buttonPrimary}`}
+            type="submit"
+            disabled={!token || loading}
+          >
+            {loading ? 'Pulling audience data...' : 'Add artist'}
+          </button>
+          {!token && <p className={styles.helper}>Connect Spotify above before running artist searches.</p>}
+          {error && <p className={styles.error}>{error}</p>}
+        </form>
+      </section>
+
+      <section className={styles.lineupPanel}>
+        <div className={styles.lineupHeader}>
+          <div>
+            <p className={styles.kicker}>Live lineup</p>
+            <h2>Ranking board</h2>
+          </div>
+          <button
+            className={`${pageStyles.button} ${pageStyles.buttonSecondary}`}
+            onClick={handleSort}
+            disabled={artists.length < 2}
+          >
+            Sort lineup
+          </button>
+        </div>
+
+        <div className={styles.statsRow}>
+          <div className={styles.statCard}>
+            <span>Artists tracked</span>
+            <strong>{artists.length}</strong>
+          </div>
+          <div className={styles.statCard}>
+            <span>Total audience touchpoints</span>
+            <strong>{formatFollowers(totalAudience)}</strong>
+          </div>
+        </div>
+
+        {artists.length === 0 ? (
+          <div className={styles.emptyState}>
+            <p>No artists added yet.</p>
+            <span>Your shortlist will appear here once you start comparing acts.</span>
+          </div>
+        ) : (
+          <ul className={styles.artistList} id="artists">
+            {artists.map((artist, index) => {
+              const weightedFollowers = Math.round((artist.spotifyFollowers + artist.instagramFollowers) / 2);
+
+              return (
+                <li className={styles.artistCard} key={artist.name}>
+                  <div className={styles.artistRank}>{String(index + 1).padStart(2, '0')}</div>
+                  <div className={styles.artistInfo}>
+                    <div className={styles.artistTitleRow}>
+                      <h3>{artist.name}</h3>
+                      <span className={styles.handle}>@{artist.instagramHandle}</span>
+                    </div>
+                    <div className={styles.metricRow}>
+                      <span>Spotify {formatFollowers(artist.spotifyFollowers)}</span>
+                      <span>Instagram {formatFollowers(artist.instagramFollowers)}</span>
+                      <span>Weighted signal {formatFollowers(weightedFollowers)}</span>
+                    </div>
+                  </div>
+                </li>
+              );
+            })}
+          </ul>
+        )}
+      </section>
     </article>
-
-    </>
   );
 }
