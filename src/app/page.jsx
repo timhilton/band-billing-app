@@ -21,9 +21,7 @@ async function generateCodeChallenge(verifier) {
 }
 
 const CLIENT_ID = process.env.NEXT_PUBLIC_CLIENT_ID;
-const REDIRECT_URI = process.env.NODE_ENV === 'production'
-  ? 'https://band-billing-app.vercel.app'
-  : 'http://localhost:3000';
+const REDIRECT_URI = process.env.NEXT_PUBLIC_REDIRECT_URI || 'https://band-billing-app.vercel.app';
 const AUTH_ENDPOINT = "https://accounts.spotify.com/authorize";
 const TOKEN_ENDPOINT = "https://accounts.spotify.com/api/token";
 const SCOPE = "user-read-private";
