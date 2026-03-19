@@ -10,6 +10,8 @@ export default function CreateArtistForm({ token }) {
   const [instagram, setInstagram] = useState('');
   const [artists, setArtists] = useState([]);
   const [loading, setLoading] = useState(false);
+  const [spotifyWeight, setSpotifyWeight] = useState(50);
+  const instagramWeight = 100 - spotifyWeight;
   const IG_ACCOUNT_ID = process.env.NEXT_PUBLIC_FB_IG_ACCOUNT_ID;
   const IG_ACCESS_TOKEN = process.env.NEXT_PUBLIC_IG_ACCESS_TOKEN;
 
@@ -83,9 +85,11 @@ export default function CreateArtistForm({ token }) {
   }
   
   const sortArtists = (artists) => {
+    const sw = spotifyWeight / 100;
+    const iw = instagramWeight / 100;
     return [...artists].sort((a, b) => {
-      const aWeightedFollowers = a.spotifyFollowers * 0.5 + a.instagramFollowers * 0.5;
-      const bWeightedFollowers = b.spotifyFollowers * 0.5 + b.instagramFollowers * 0.5;
+      const aWeightedFollowers = a.spotifyFollowers * sw + a.instagramFollowers * iw;
+      const bWeightedFollowers = b.spotifyFollowers * sw + b.instagramFollowers * iw;
       return bWeightedFollowers - aWeightedFollowers;
     });
   }
@@ -137,6 +141,48 @@ export default function CreateArtistForm({ token }) {
           {!token && <p className={styles.helper}>Connect Spotify above before running artist searches.</p>}
           {error && <p className={styles.error}>{error}</p>}
         </form>
+
+        <div className={styles.weightingSection}>
+          <p className={styles.weightingLabel}>Signal weighting</p>
+          <div className={styles.weightingSlider}>
+            <div className={styles.weightingPlatform}>
+              <span className={styles.platformName}>Spotify</span>
+              <span className={styles.platformPct}>{spotifyWeight}%</span>
+            </div>
+            <input
+              className={styles.slider}
+              type="range"
+              min="0"
+              max="100"
+              value={spotifyWeight}
+              onChange={(e) => setSpotifyWeight(Number(e.target.value))}
+            />
+            <div className={styles.sliderTrackLabels}>
+              <span>0%</span>
+              <span>50%</span>
+              <span>100%</span>
+            </div>
+          </div>
+          <div className={styles.weightingSlider}>
+            <div className={styles.weightingPlatform}>
+              <span className={styles.platformName}>Instagram</span>
+              <span className={styles.platformPct}>{instagramWeight}%</span>
+            </div>
+            <input
+              className={styles.slider}
+              type="range"
+              min="0"
+              max="100"
+              value={instagramWeight}
+              onChange={(e) => setSpotifyWeight(100 - Number(e.target.value))}
+            />
+            <div className={styles.sliderTrackLabels}>
+              <span>0%</span>
+              <span>50%</span>
+              <span>100%</span>
+            </div>
+          </div>
+        </div>
       </section>
 
       <section className={styles.lineupPanel}>
@@ -173,7 +219,7 @@ export default function CreateArtistForm({ token }) {
         ) : (
           <ul className={styles.artistList} id="artists">
             {artists.map((artist, index) => {
-              const weightedFollowers = Math.round((artist.spotifyFollowers + artist.instagramFollowers) / 2);
+              const weightedFollowers = Math.round(artist.spotifyFollowers * (spotifyWeight / 100) + artist.instagramFollowers * (instagramWeight / 100));
 
               return (
                 <li className={styles.artistCard} key={artist.name}>
