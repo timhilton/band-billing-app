@@ -110,7 +110,7 @@ export default function CreateArtistForm({ token }) {
       <section className={styles.formPanel}>
         <div className={styles.panelHeader}>
           <p className={styles.kicker}>Artist workspace</p>
-          <h2>Build the shortlist</h2>
+          <h2>Build the bill</h2>
           <p className={styles.panelText}>
             Search one artist at a time and combine Spotify followers with Instagram audience size.
           </p>
@@ -221,7 +221,7 @@ export default function CreateArtistForm({ token }) {
         {artists.length === 0 ? (
           <div className={styles.emptyState}>
             <p>No artists added yet.</p>
-            <span>Your shortlist will appear here once you start comparing acts.</span>
+            <span>Your bill will appear here once you start comparing acts.</span>
           </div>
         ) : (
           <ul className={styles.artistList} id="artists">

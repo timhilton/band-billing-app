@@ -98,8 +98,7 @@ export default function Home() {
     <main className={styles.main}>
       <section className={styles.hero}>
         <div className={styles.heroCopy}>
-          <p className={styles.eyebrow}>Audience-led booking</p>
-          <h1 className={styles.title}>Design a sharper bill with real fan momentum.</h1>
+          <h1 className={styles.eyebrow}>Audience-led billing</h1>
           <p className={styles.subtitle}>
             Compare Spotify reach and Instagram pull in one place so your lineup decisions feel fast,
             informed, and presentation-ready.
@@ -127,14 +126,6 @@ export default function Home() {
             <div className={styles.metricCard}>
               <span className={styles.metricLabel}>Data sources</span>
               <strong>Spotify + Instagram</strong>
-            </div>
-            <div className={styles.metricCard}>
-              <span className={styles.metricLabel}>Ideal use</span>
-              <strong>Festival billing</strong>
-            </div>
-            <div className={styles.metricCard}>
-              <span className={styles.metricLabel}>Workflow</span>
-              <strong>Search, compare, sort</strong>
             </div>
             <div className={styles.metricCard}>
               <span className={styles.metricLabel}>Outcome</span>
