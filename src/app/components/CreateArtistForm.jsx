@@ -64,7 +64,8 @@ export default function CreateArtistForm({ token }) {
         name: name,
         spotifyFollowers: spotifyFollowers,
         instagramHandle: instagram,
-        instagramFollowers: instagramFollowers
+        instagramFollowers: instagramFollowers,
+        locked: false,
       }
 
       console.log(artistObj);
@@ -83,15 +84,21 @@ export default function CreateArtistForm({ token }) {
     const sortedArtists = sortArtists(artists);
     setArtists(sortedArtists);
   }
-  
+
+  const toggleLock = (artistName) => {
+    setArtists(artists.map(a => a.name === artistName ? { ...a, locked: !a.locked } : a));
+  }
+
   const sortArtists = (artists) => {
     const sw = spotifyWeight / 100;
     const iw = instagramWeight / 100;
-    return [...artists].sort((a, b) => {
+    const locked = artists.filter(a => a.locked);
+    const unlocked = artists.filter(a => !a.locked).sort((a, b) => {
       const aWeightedFollowers = a.spotifyFollowers * sw + a.instagramFollowers * iw;
       const bWeightedFollowers = b.spotifyFollowers * sw + b.instagramFollowers * iw;
       return bWeightedFollowers - aWeightedFollowers;
     });
+    return [...locked, ...unlocked];
   }
 
   const totalAudience = artists.reduce((total, artist) => {
@@ -192,7 +199,7 @@ export default function CreateArtistForm({ token }) {
             <h2>Ranking board</h2>
           </div>
           <button
-            className={`${pageStyles.button} ${pageStyles.buttonSecondary}`}
+            className={`${pageStyles.button} ${pageStyles.buttonSecondaryDark}`}
             onClick={handleSort}
             disabled={artists.length < 2}
           >
@@ -222,12 +229,19 @@ export default function CreateArtistForm({ token }) {
               const weightedFollowers = Math.round(artist.spotifyFollowers * (spotifyWeight / 100) + artist.instagramFollowers * (instagramWeight / 100));
 
               return (
-                <li className={styles.artistCard} key={artist.name}>
+                <li className={`${styles.artistCard}${artist.locked ? ` ${styles.artistCardLocked}` : ''}`} key={artist.name}>
                   <div className={styles.artistRank}>{String(index + 1).padStart(2, '0')}</div>
                   <div className={styles.artistInfo}>
                     <div className={styles.artistTitleRow}>
                       <h3>{artist.name}</h3>
                       <span className={styles.handle}>@{artist.instagramHandle}</span>
+                      <button
+                        className={`${styles.lockButton}${artist.locked ? ` ${styles.lockButtonActive}` : ''}`}
+                        onClick={() => toggleLock(artist.name)}
+                        aria-label={artist.locked ? 'Unlock artist' : 'Lock artist'}
+                      >
+                        {artist.locked ? 'Locked' : 'Lock'}
+                      </button>
                     </div>
                     <div className={styles.metricRow}>
                       <span>Spotify {formatFollowers(artist.spotifyFollowers)}</span>
